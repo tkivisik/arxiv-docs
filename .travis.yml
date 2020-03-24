@@ -31,10 +31,10 @@ deploy:
     tags: true
 
 
-# Deploy the develop branch to development.
+# Deploy the develop branch to the development namespace
 - provider: script
   script:
     ./make_and_push_image.sh &&
     ./deploy.sh marxdown development
   on:
-    branch: development
+    branch: develop
