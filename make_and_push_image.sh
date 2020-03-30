@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo "Starting make_and_push_image.sh"
+
 set -o pipefail
 set -o errexit
 set -o nounset

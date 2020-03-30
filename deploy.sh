@@ -25,6 +25,8 @@
 #     e.g. s3://...
 # - DEPLOYMENT_DOMAIN_{namespace}
 
+echo "Starting deploy.sh"
+
 CHART_NAME=$1
 ENVIRONMENT=$2
 SITE_NAME="docs"
