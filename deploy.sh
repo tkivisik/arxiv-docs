@@ -53,7 +53,7 @@ else
     DEPLOYMENT_HOSTNAME=$CHART_NAME"."$DEPLOYMENT_HOSTNAME
 fi
 
-echo "Deploying ${CHART_NAME} in ${ENVIRONMENT}"
+echo "Deploying ${CHART_NAME} in ${ENVIRONMENT} as ${DEPLOYMENT_HOSTNAME}"
 
 # Install kubectl & Helm
 curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.9.2/bin/linux/amd64/kubectl
@@ -86,8 +86,15 @@ helm repo add arxiv $HELM_REPOSITORY
 helm repo update
 echo "Updated Helm repo"
 
+echo "Starting helm get ${HELM_RELEASE} in ${ENVIRONMENT}"
+echo "  arxiv/$CHART_NAME"
+echo "  imageName=$IMAGE_NAME"
+echo "  imageTag=$TRAVIS_COMMIT"
+echo "  host=$DEPLOYMENT_HOSTNAME"
+
 # Deploy to Kubernetes.
-helm get $HELM_RELEASE --tiller-namespace $ENVIRONMENT 2> /dev/null \
+#helm get $HELM_RELEASE --tiller-namespace $ENVIRONMENT 2> /dev/null \
+helm get $HELM_RELEASE --tiller-namespace $ENVIRONMENT \
     && helm upgrade $HELM_RELEASE arxiv/$CHART_NAME \
         --set=imageName=$IMAGE_NAME \
         --set=imageTag=$TRAVIS_COMMIT \
@@ -110,8 +117,10 @@ helm get $HELM_RELEASE --tiller-namespace $ENVIRONMENT 2> /dev/null \
         --set=namespace=$ENVIRONMENT \
         --values=deploy/values.yaml \
         --tiller-namespace $ENVIRONMENT \
-        --namespace $ENVIRONMENT 2> /dev/null
+        --namespace $ENVIRONMENT
 DEPLOY_EXIT=$?
+echo "  DEPLOY_EXIT=$DEPLOY_EXIT"
+#--namespace $ENVIRONMENT 2> /dev/null
 
 # Send the result back to GitHub.
 if [ $DEPLOY_EXIT -ne 0 ]; then
