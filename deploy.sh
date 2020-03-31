@@ -26,6 +26,12 @@
 # - DEPLOYMENT_DOMAIN_{namespace}
 
 echo "Starting deploy.sh"
+echo "  TRAVIS_APP_HOST=$TRAVIS_APP_HOST"
+echo "  TRAVIS_BRANCH=$TRAVIS_BRANCH"
+echo "  TRAVIS_DIST=$TRAVIS_DIST"
+echo "  TRAVIS_OS_NAME=$TRAVIS_OS_NAME"
+echo "  TRAVIS_DIST=$TRAVIS_DIST"
+echo "  TRAVIS_OS_NAME=$TRAVIS_OS_NAME"
 
 CHART_NAME=$1
 ENVIRONMENT=$2
@@ -92,6 +98,10 @@ echo "  imageName=$IMAGE_NAME"
 echo "  imageTag=$TRAVIS_COMMIT"
 echo "  host=$DEPLOYMENT_HOSTNAME"
 
+helm get $HELM_RELEASE --tiller-namespace $ENVIRONMENT
+GET_EXIT=$?
+echo "  GET_EXIT=$GET_EXIT"
+
 # Deploy to Kubernetes.
 #helm get $HELM_RELEASE --tiller-namespace $ENVIRONMENT 2> /dev/null \
 helm get $HELM_RELEASE --tiller-namespace $ENVIRONMENT \
@@ -105,7 +115,7 @@ helm get $HELM_RELEASE --tiller-namespace $ENVIRONMENT \
         --set=namespace=$ENVIRONMENT \
         --values=deploy/values.yaml \
         --tiller-namespace $ENVIRONMENT \
-        --namespace $ENVIRONMENT 2> /dev/null \
+        --namespace $ENVIRONMENT \
     || helm install arxiv/$CHART_NAME \
         --name=$HELM_RELEASE \
         --set=imageName=$IMAGE_NAME \
@@ -120,6 +130,7 @@ helm get $HELM_RELEASE --tiller-namespace $ENVIRONMENT \
         --namespace $ENVIRONMENT
 DEPLOY_EXIT=$?
 echo "  DEPLOY_EXIT=$DEPLOY_EXIT"
+#--namespace $ENVIRONMENT 2> /dev/null \
 #--namespace $ENVIRONMENT 2> /dev/null
 
 # Send the result back to GitHub.
