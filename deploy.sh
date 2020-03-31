@@ -30,8 +30,6 @@ echo "  TRAVIS_APP_HOST=$TRAVIS_APP_HOST"
 echo "  TRAVIS_BRANCH=$TRAVIS_BRANCH"
 echo "  TRAVIS_DIST=$TRAVIS_DIST"
 echo "  TRAVIS_OS_NAME=$TRAVIS_OS_NAME"
-echo "  TRAVIS_DIST=$TRAVIS_DIST"
-echo "  TRAVIS_OS_NAME=$TRAVIS_OS_NAME"
 
 CHART_NAME=$1
 ENVIRONMENT=$2
@@ -92,11 +90,15 @@ helm repo add arxiv $HELM_REPOSITORY
 helm repo update
 echo "Updated Helm repo"
 
+echo "Starting helm ls"
+helm ls labs-static
+
 echo "Starting helm get ${HELM_RELEASE} in ${ENVIRONMENT}"
 echo "  arxiv/$CHART_NAME"
 echo "  imageName=$IMAGE_NAME"
 echo "  imageTag=$TRAVIS_COMMIT"
 echo "  host=$DEPLOYMENT_HOSTNAME"
+
 
 helm get $HELM_RELEASE --tiller-namespace $ENVIRONMENT
 GET_EXIT=$?
