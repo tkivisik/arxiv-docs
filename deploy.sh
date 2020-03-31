@@ -90,6 +90,13 @@ helm repo add arxiv $HELM_REPOSITORY
 helm repo update
 echo "Updated Helm repo"
 
+echo "Starting ip1:"
+curl ifconfig.me
+echo "Starting ip2:"
+hostname -I
+echo "Starting ip3:"
+/sbin/ifconfig
+
 echo "Starting helm ls"
 helm ls labs-static
 
