@@ -85,30 +85,24 @@ echo "Set up helm client"
 
 # Add S3 repo. Requires AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY to be set
 # in the environment.
-helm plugin install https://github.com/hypnoglow/helm-s3.git || echo "Helm S3 already installed"
+helm plugin install https://github.com/hypnoglow/helm-s3.git --version 0.9.2 || echo "Could not install helm-s3 plugin"
 helm repo add arxiv $HELM_REPOSITORY
 helm repo update
 echo "Updated Helm repo"
 
-echo "Starting ip1:"
-curl ifconfig.me
+echo "IP1:"
+curl -s https://ifconfig.me
 echo ""
-echo "Starting ip2:"
-hostname -I
 echo "Pod count:"
-kubectl get pods -A | wc
-echo "Pod ages:"
-kubectl get pods | awk '{print $5}'
-
-echo "Starting helm ls"
-helm ls labs-static
+kubectl get pods | wc
+echo "Helm ls marxdown count:"
+helm ls --tiller-namespace $ENVIRONMENT marxdown | wc
 
 echo "Starting helm get ${HELM_RELEASE} in ${ENVIRONMENT}"
 echo "  arxiv/$CHART_NAME"
 echo "  imageName=$IMAGE_NAME"
 echo "  imageTag=$TRAVIS_COMMIT"
 echo "  host=$DEPLOYMENT_HOSTNAME"
-
 
 helm get $HELM_RELEASE --tiller-namespace $ENVIRONMENT
 GET_EXIT=$?
