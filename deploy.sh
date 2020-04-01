@@ -92,10 +92,13 @@ echo "Updated Helm repo"
 
 echo "Starting ip1:"
 curl ifconfig.me
+echo ""
 echo "Starting ip2:"
 hostname -I
-echo "Starting ip3:"
-/sbin/ifconfig
+echo "Pod count:"
+kubectl get pods -A | wc
+echo "Pod ages:"
+kubectl get pods | awk '{print $5}'
 
 echo "Starting helm ls"
 helm ls labs-static
